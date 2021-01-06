@@ -1,0 +1,4 @@
+ #!/bin/bash
+ 
+ ffprobe "$1" 2>&1  | grep -E 'Duration|Stream'
+ 
