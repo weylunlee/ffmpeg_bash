@@ -1,7 +1,7 @@
  #!/bin/bash
  
+#ffmpeg -i "$1" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30" -af "volume=2.7dB" -b:a 128k "$2"
 ffmpeg -i "$1" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30" -b:a 128k "$2"
-
 echo -------------------------------------------------------
 echo "in: $1";
 echo "out: $2";
