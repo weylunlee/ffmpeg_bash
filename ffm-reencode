@@ -4,6 +4,7 @@ ffmpeg -i "$1" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -
 
 #ffmpeg -i "$1" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30" -b:a 128k "$2"
 #ffmpeg -i "$1" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30,eq=brightness=0.15" -af loudnorm -b:a 128k "$2"
+
 echo -------------------------------------------------------
 echo "in: $1";
 echo "out: $2";

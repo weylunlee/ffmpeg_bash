@@ -12,4 +12,4 @@ echo "in: $in";
 echo "out: $out";
 echo "sub: $sub";
 
-ffmpeg -i "$in" -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass='$sub',fps=fps=30" -b:a 128k "$out"
+ffmpeg -i $in -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=$sub,fps=fps=30" -b:a 128k $out
