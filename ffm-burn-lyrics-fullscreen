@@ -1,0 +1,59 @@
+#!/bin/bash
+
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  echo "usage: ffm-burn-lyrics-fullscreen input_file subtitle_file output_file [-v volume_adjust (dB)] [-b brightness_adjust]"
+  echo
+  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4"
+  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -v 3.5"
+  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -b 0.15"
+  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -v 3.5 -b 0.15"
+  exit 1
+fi
+
+#first read in the compulsory args into an array
+INDEX=0
+while [ -n "$1" -a "${1:0:1}" != "-" ]; do
+  ARG[$((++INDEX))]="$1"
+  shift
+done
+if [ "$INDEX" -ne 3 ]; then
+  echo "Error"
+  exit 1
+fi
+
+#next parse the optional args
+while getopts v:b: flag
+do
+  case "${flag}" in
+    v) vol=${OPTARG};;
+    b) bri=${OPTARG};;
+  esac
+done
+
+#echo on
+set -x
+
+#sample ffmpeg command:
+#ffmpeg -i $in -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=$sub, fps=fps=30, eq=brightness=0.15" -af "volume=5.2dB" -b:a 128k $out
+
+ffmpeg -i ${ARG[1]} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=${ARG[2]}, fps=fps=30\
+${bri:+, eq=brightness="${bri}"}\
+"\
+${vol:+ -af volume="${vol}dB"} -b:a 128k ${ARG[3]}
+
+#echo off
+{ set +x; } 2>/dev/null
+
+echo "-----------------------------------------------"
+echo " input file: ${ARG[1]}";
+echo "   subtitle: ${ARG[2]}";
+echo "output file: ${ARG[3]}";
+echo "     volume: $vol";
+echo " brightness: $bri";
+echo "-----------------------------------------------"
+
+#output probe of resulting file streams
+ffp "$3"
