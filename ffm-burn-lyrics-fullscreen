@@ -4,12 +4,14 @@ clear
 
 #if no args passed display usage info
 if [ $# -eq 0 ]; then
+  RED='\033[1;31m'
+  NONE='\033[0m'
+
+  echo -e "${RED}Burns lyrics fullscreen reencoding with default encoding parameters${NONE}"
   echo "usage: ffm-burn-lyrics-fullscreen input_file subtitle_file output_file [-v volume_adjust (dB)] [-b brightness_adjust]"
   echo
-  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4"
-  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -v 3.5"
-  echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -b 0.15"
   echo "   ex: ffm-burn-lyrics-fullscreen input.mov subtitle.ass output.mp4 -v 3.5 -b 0.15"
+  echo
   exit 1
 fi
 
@@ -37,7 +39,8 @@ done
 set -x
 
 #sample ffmpeg command:
-#ffmpeg -i $in -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=$sub, fps=fps=30, eq=brightness=0.15" -af "volume=5.2dB" -b:a 128k $out
+#ffmpeg -i $in -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=$sub, fps=fps=30, eq=brightness=0.15"
+#-af "volume=5.2dB" -b:a 128k $out
 
 ffmpeg -i ${ARG[1]} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=${ARG[2]}, fps=fps=30\
 ${bri:+, eq=brightness="${bri}"}\
@@ -56,4 +59,4 @@ echo " brightness: $bri";
 echo "-----------------------------------------------"
 
 #output probe of resulting file streams
-ffp "$3"
+ffp ${ARG[3]}

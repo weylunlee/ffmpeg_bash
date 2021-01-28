@@ -1,3 +1,18 @@
 #!/bin/bash
 
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  RED='\033[1;31m'
+  NONE='\033[0m'
+
+  echo -e "${RED}Displays video stream information${NONE}"
+  echo "usage: ffp input_file"
+  echo
+  echo "   ex: ffp input.mp4"
+  echo
+  exit 1
+fi
+
 ffprobe $1 2>&1  | grep -E 'Duration|Stream'

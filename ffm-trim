@@ -1,5 +1,20 @@
 #!/bin/bash
 
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  RED='\033[1;31m'
+  NONE='\033[0m'
+
+  echo -e "${RED}Trims video from start time to end time - without reencoding${NONE}"
+  echo "usage: ffm-trim input_file start_time end_time output_file"
+  echo
+  echo "   ex: ffm-trim input.mp4 00:00:15.5 00:35:05 output.mp4"
+  echo
+  exit 1
+fi
+
 TIME1=$2
 TIME2=$3
 

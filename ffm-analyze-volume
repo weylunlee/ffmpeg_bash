@@ -1,3 +1,18 @@
 #!/bin/bash
 
-ffmpeg -i $1 -filter:a volumedetect -f null /dev/null 
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  RED='\033[1;31m'
+  NONE='\033[0m'
+
+  echo -e "${RED}Analyzes audio volume information for given file${NONE}"
+  echo "usage: ffm-analyze-volume input_file"
+  echo
+  echo "   ex: ffm-analyze-volume input.mp4"
+  echo
+  exit 1
+fi
+
+ffmpeg -i $1 -filter:a volumedetect -f null /dev/null
