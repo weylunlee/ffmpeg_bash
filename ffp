@@ -1,7 +1,5 @@
 #!/bin/bash
 
-clear
-
 #if no args passed display usage info
 if [ $# -eq 0 ]; then
   RED='\033[1;31m'

@@ -1,18 +1,69 @@
 #!/bin/bash
 
-TIME1=$2
-TIME2=$3
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  COLOR='\033[1;33m'
+  NONE='\033[0m'
+
+  echo -e "${COLOR}Trims video from start time to end time - reencoding with default encoding parameters"
+  echo -e "Optionally adjust volume and brightness${NONE}"
+  echo
+  echo "usage: ffm-trim-reencode input_file start_time end_time output_file [-v volume_adjust (dB)] [-b brightness_adjust]"
+  echo "   ex: ffm-trim-reencode input.mp4 00:00:15.5 00:35:05 output.mp4  -v 3.5 -b 0.15"
+  echo
+  exit 1
+fi
+
+#first read in the compulsory args into an array
+INDEX=0
+while [ -n "$1" -a "${1:0:1}" != "-" ]; do
+  ARG[$((++INDEX))]="$1"
+  shift
+done
+if [ "$INDEX" -ne 4 ]; then
+  echo "Error: Not all compulsory parameters supplied"
+  exit 1
+fi
+
+#next parse the optional args
+while getopts v:b: flag
+do
+  case "${flag}" in
+    v) vol=${OPTARG};;
+    b) bri=${OPTARG};;
+  esac
+done
+
+TIME1=${ARG[2]}
+TIME2=${ARG[3]}
 
 SEC1=`date +%s -d ${TIME1}`
 SEC2=`date +%s -d ${TIME2}`
 
 DIFFSEC=`expr ${SEC2} - ${SEC1}`
 
-#ffmpeg -ss $2 -i "$1" -t ${DIFFSEC} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30" -af "volume=6dB" -b:a 128k "$4"
-#ffmpeg -ss $2 -i "$1" -t ${DIFFSEC} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -af "volume=11.5dB" -b:a 128k "$4"
-ffmpeg -ss $2 -i $1 -t ${DIFFSEC} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -b:a 128k $4
-echo -------------------------------------------------------
-echo Start ${TIME1}
-echo Finish ${TIME2}
-echo Duration ${DIFFSEC} seconds == `date +%H:%M:%S -ud @${DIFFSEC}`
-ffp $4
+#echo on
+set -x
+
+ffmpeg -ss ${ARG[2]} -i ${ARG[1]} -t ${DIFFSEC} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30\
+${bri:+, eq=brightness="${bri}"}\
+"\
+${vol:+ -af volume="${vol}dB"} -b:a 128k ${ARG[4]}
+
+#echo off
+{ set +x; } 2>/dev/null
+
+echo "-----------------------------------------------"
+echo " input file: ${ARG[1]}"
+echo "output file: ${ARG[4]}"
+echo " start time: ${TIME1}"
+echo "   end time: ${TIME2}"
+echo "   duration: `date +%H:%M:%S -ud @${DIFFSEC}` == ${DIFFSEC} seconds"
+echo "     volume: $vol"
+echo " brightness: $bri"
+echo "-----------------------------------------------"
+
+#output probe of resulting file streams
+ffp ${ARG[4]}
