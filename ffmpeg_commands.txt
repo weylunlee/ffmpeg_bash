@@ -1,0 +1,8 @@
+ffmpeg commands
+
+
+-- strip video of audio
+ffmpeg -i Benediction.mp4 -codec copy -an b.mp4
+
+-- add audio into video
+ffmpeg -i b.mp4 -i b.mp3 -c:v copy bout.mp4
