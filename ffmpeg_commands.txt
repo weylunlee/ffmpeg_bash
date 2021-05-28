@@ -7,10 +7,21 @@ ffmpeg -i Benediction.mp4 -codec copy -an b.mp4
 -- add audio into video
 ffmpeg -i b.mp4 -i b.mp3 -c:v copy bout.mp4
 
--- crop
-ffmpeg -i Romans_12_2_-_Fundations_For_Generations_Part_3_-_Change_For_The_Better.mp4 -c:v h264_nvenc -s 1920x1080 -filter:v "crop=1920:1080:184:0" -b:v 1500k -bufsize 1500k -ar 44100  out.mp4
+-- crop doesn't work right
+ffmpeg -i Romans_12_2_-_Fundations_For_Generations_Part_3_-_Change_For_The_Better.mp4 -filter:v "crop=1280:720:123:0" -c:v h264_nvenc -s 1280x720 -b:v 1500k -bufsize 1500k -ar 44100  out.mp4
 
-ffmpeg -i 2021-04-25_Mike_Kim_Romans_12_1_-_Foundations_For_Generations_-_Living_Sacrifices.mp4 -c:v h264_nvenc -s 1920x1080 -filter:v "crop=1920:1080:184:0" -b:v 1500k -bufsize 1500k -ar 44100  out.mp4
+-- crop, then resize
+ffmpeg -i Romans_12_2_-_Foundations_For_Generations_-_Part_4_-_Battlefield_of_the_Mind.mp4 -filter:v "crop=1920:1080:184:0" -c:v h264_nvenc -s 1280x720 -b:v 1500k -bufsize 1500k -ar 44100  outcr.mp4
 
--overlay banner with fade in/out
-ffmpeg -i out.mp4 -loop 1 -i banner.jpg -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=0:d=3:alpha=1,fade=out:st=6:d=3:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h):shortest=1" -y out1.mp4
+-overlay banner with fade in/out white final
+ffmpeg -i outcr.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1" -y outbanner.mp4
+
+-overlay banner with subtitle
+ffmpeg -i outcr.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1, ass=banner.ass" -y outbanner.mp4
+
+
+85% opacity. Title: 44pt CMG Sans Condensed. Speaker: 36pt, CMG Sans Semibold Condensed.
+
+Foundations For Generations: Change For The Better (Romans 12:2)
+
+Foundations For Generations: Battlefield Of The Mind (Romans 12:2)

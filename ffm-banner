@@ -1,0 +1,32 @@
+#!/bin/bash
+
+clear
+
+#if no args passed display usage info
+if [ $# -eq 0 ]; then
+  COLOR='\033[1;33m'
+  NONE='\033[0m'
+
+  echo -e "${COLOR}Reencode with banner"
+  echo
+  echo "usage: ffm-banner input_file output_file"
+  echo "   ex: ffm-banner input.mov output.mp4
+  echo
+  exit 1
+fi
+
+#first read in the compulsory args into an array
+INDEX=0
+while [ -n "$1" -a "${1:0:1}" != "-" ]; do
+  ARG[$((++INDEX))]="$1"
+  shift
+done
+if [ "$INDEX" -ne 2 ]; then
+  echo "Error"
+  exit 1
+fi
+
+#echo on
+set -x
+
+ffmpeg -i ${ARG[1]} -loop 1 -i banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1" -y ${ARG[2]}
