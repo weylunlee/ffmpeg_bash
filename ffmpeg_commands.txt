@@ -17,7 +17,17 @@ ffmpeg -i Romans_12_2_-_Foundations_For_Generations_-_Part_4_-_Battlefield_of_th
 ffmpeg -i outcr.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1" -y outbanner.mp4
 
 -overlay banner with subtitle
-ffmpeg -i outcr.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1, ass=banner.ass" -y outbanner.mp4
+ffmpeg -i new.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1, ass=banner.ass" -y outbanner.mp4
+
+--concat panasonic x920 files
+ffmpeg -i "concat:00017.MTS|00018.MTS" -vcodec copy -acodec ac3 -sn out.mov
+
+-- replace audio
+ffmpeg -i v.mp4 -i a.wav -c:v copy -map 0:v:0 -map 1:a:0 new.mp4
+
+-- remove audio delay
+ffmpeg -i 2021-06-20\ 11-36-50.mp4 -itsoffset 00:00:00.45 -i 2021-06-20\ 11-36-50.mp4 -c:a copy -c:v copy -map 0:a:0 -map 1:v:0 out.mp4
+
 
 
 85% opacity. Title: 44pt CMG Sans Condensed. Speaker: 36pt, CMG Sans Semibold Condensed.

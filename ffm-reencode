@@ -43,10 +43,10 @@ set -x
 #ffmpeg -i $in -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "ass=$sub, fps=fps=30, eq=brightness=0.15"
 #-af "volume=5.2dB" -b:a 128k $out
 
-ffmpeg -i ${ARG[1]} -b:v 1500k -bufsize 1500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30\
+ffmpeg -i ${ARG[1]} -b:v 2500k -bufsize 2500k -ar 44100 -c:v h264_nvenc -s 1280x720 -vf "fps=fps=30\
 ${bri:+, eq=brightness="${bri}"}\
 "\
-${vol:+ -af volume="${vol}dB"} -b:a 128k ${ARG[2]}
+${vol:+ -af volume="${vol}dB"} -b:a 160k ${ARG[2]}
 
 #echo off
 { set +x; } 2>/dev/null
