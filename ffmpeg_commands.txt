@@ -11,7 +11,7 @@ ffmpeg -i b.mp4 -i b.mp3 -c:v copy bout.mp4
 ffmpeg -i Romans_12_2_-_Fundations_For_Generations_Part_3_-_Change_For_The_Better.mp4 -filter:v "crop=1280:720:123:0" -c:v h264_nvenc -s 1280x720 -b:v 1500k -bufsize 1500k -ar 44100  out.mp4
 
 -- crop, then resize
-ffmpeg -i Romans_12_2_-_Foundations_For_Generations_-_Part_4_-_Battlefield_of_the_Mind.mp4 -filter:v "crop=1920:1080:184:0" -c:v h264_nvenc -s 1280x720 -b:v 1500k -bufsize 1500k -ar 44100  outcr.mp4
+ffmpeg -i Benediction_2021-09-26_reenc_vol.mp4 -filter:v "crop=1191:670:123:50" -c:v h264_nvenc -s 1280x720 -b:v 1500k -bufsize 1500k -ar 44100  outcr.mp4
 
 -overlay banner with fade in/out white final
 ffmpeg -i outcr.mp4 -loop 1 -i ../banner.png -c:v h264_nvenc -filter_complex "[1:0] format=rgba,fade=in:st=3:d=2:alpha=1,fade=out:st=11:d=2:alpha=1 [ovr];[0:0][ovr] overlay=0:(main_h-overlay_h-35):shortest=1" -y outbanner.mp4
